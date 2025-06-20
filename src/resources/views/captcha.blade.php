@@ -1,0 +1,1 @@
+<div id="yandex-captcha" class="smart-captcha" data-sitekey="{{ config('yandex-smart-captcha.sitekey') }}" data-hl="{{ app()->getLocale() }}"></div>
