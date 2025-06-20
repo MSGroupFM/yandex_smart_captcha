@@ -106,8 +106,8 @@ This command will copy the language files to:
 ```
 resources/lang/vendor/yandex-smart-captcha/ru/validation.php
 resources/lang/vendor/yandex-smart-captcha/en/validation.php
-You can now edit these files to override any validation error messages as needed.
 ```
+You can now edit these files to override any validation error messages as needed.
 
 #### Note:
 Laravel will use your published files in ``resources/lang/vendor/yandex-smart-captcha`` instead of the package defaults.
