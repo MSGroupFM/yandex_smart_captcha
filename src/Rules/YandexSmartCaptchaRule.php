@@ -10,7 +10,7 @@
 namespace MSGLaravel\YandexSmartCaptcha\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
 
 class YandexSmartCaptchaRule implements Rule
 {
@@ -24,18 +24,32 @@ class YandexSmartCaptchaRule implements Rule
         }
 
         $serverKey = config('yandex-smart-captcha.secret');
-        $response  = Http::asForm()->post('https://smartcaptcha.yandexcloud.net/validate', [
-            'secret' => $serverKey,
-            'token'  => $value,
-            'ip'     => request()->ip(),
+
+        $client = new Client([
+            'timeout' => 5, // seconds (можно изменить по необходимости)
+            'http_errors' => false // чтобы не бросало исключения на 4xx/5xx
         ]);
 
-        if (!$response->ok()) {
+        try {
+            $response = $client->post('https://smartcaptcha.yandexcloud.net/validate', [
+                'form_params' => [
+                    'secret' => $serverKey,
+                    'token'  => $value,
+                    'ip'     => request()->ip(),
+                ]
+            ]);
+        } catch (\Exception $e) {
             $this->errorCode = 'service_unavailable';
             return false;
         }
 
-        $data = $response->json();
+        $statusCode = $response->getStatusCode();
+        if ($statusCode < 200 || $statusCode >= 300) {
+            $this->errorCode = 'service_unavailable';
+            return false;
+        }
+
+        $data = json_decode($response->getBody(), true);
 
         if (!isset($data['status'])) {
             $this->errorCode = 'invalid_response';
@@ -46,7 +60,6 @@ class YandexSmartCaptchaRule implements Rule
             return true;
         }
 
-        // Можно детектировать коды ошибок Яндекса если они есть в ответе
         if (!empty($data['error_codes'])) {
             $this->errorCode = $data['error_codes'][0];
         } else {

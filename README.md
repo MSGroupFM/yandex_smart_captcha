@@ -65,7 +65,7 @@ Use it together with ``@yandexSmartCaptchaScript('onloadFunction')``.
 In your controller:
 
 ```php
-use MSGLaravel\YandexSmartCaptcha\Rules\YandexCaptchaRule;
+use MSGLaravel\YandexSmartCaptcha\Rules\YandexSmartCaptchaRule;
 
 $request->validate([
     // ...
@@ -75,7 +75,7 @@ $request->validate([
 
 You can customize the error message for the captcha in your controller (applies to all errors of this rule):
 ```php
-use MSGLaravel\YandexSmartCaptcha\Rules\YandexCaptchaRule;
+use MSGLaravel\YandexSmartCaptcha\Rules\YandexSmartCaptchaRule;
 
 $request->validate(
     [
