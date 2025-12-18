@@ -16,9 +16,10 @@ To get started, use Composer to add the package to your project's dependencies:
     composer require msglaravel/yandex-smart-captcha
 
 
-Add `YANDEX_SMARTCAPTCHA_SITEKEY` and `YANDEX_SMARTCAPTCHA_SECRET` to your `.env` file.
+Add to your `.env` file:
 
 ```
+YANDEX_SMARTCAPTCHA_ENDPOINT=https://smartcaptcha.cloud.yandex.ru
 YANDEX_SMARTCAPTCHA_SITEKEY=sitekey
 YANDEX_SMARTCAPTCHA_SECRET=secret
 ```
