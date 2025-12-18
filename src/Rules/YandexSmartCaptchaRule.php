@@ -11,6 +11,7 @@ namespace MSGLaravel\YandexSmartCaptcha\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use GuzzleHttp\Client;
+use MSGLaravel\YandexSmartCaptcha\Helpers\FormHelper;
 
 class YandexSmartCaptchaRule implements Rule
 {
@@ -24,14 +25,16 @@ class YandexSmartCaptchaRule implements Rule
         }
 
         $serverKey = config('yandex-smart-captcha.secret');
+        $endPoint = FormHelper::getEndpoint();
 
         $client = new Client([
+			'base_uri' => $endPoint,
             'timeout' => 5, // seconds (можно изменить по необходимости)
             'http_errors' => false // чтобы не бросало исключения на 4xx/5xx
         ]);
 
         try {
-            $response = $client->post('https://smartcaptcha.yandexcloud.net/validate', [
+            $response = $client->post('/validate', [
                 'form_params' => [
                     'secret' => $serverKey,
                     'token'  => $value,

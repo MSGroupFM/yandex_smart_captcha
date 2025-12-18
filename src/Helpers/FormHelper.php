@@ -11,13 +11,38 @@ namespace MSGLaravel\YandexSmartCaptcha\Helpers;
 
 class FormHelper
 {
-    public static function initJs()
-    {
-        return '<script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>';
-    }
+	public static function getEndpoint(): string
+	{
+		$endpoint = trim((string) config('yandex-smart-captcha.endpoint', 'https://smartcaptcha.cloud.yandex.ru'));
 
-    public static function extendInitJs(string $functionName = 'onloadFunction')
-    {
-        return '<script src="https://smartcaptcha.yandexcloud.net/captcha.js?render=onload&onload=' . e($functionName) .'"></script>';
-    }
+		// Если схема не указана — добавляем https://
+		if (!preg_match('#^https?://#i', $endpoint))
+		{
+			$endpoint = 'https://'.$endpoint;
+		}
+
+		// Убираем возможный слэш в конце
+		return rtrim($endpoint, '/');
+	}
+
+	public static function initJs(): string
+	{
+		$endpoint = static::getEndpoint();
+
+		return sprintf(
+			'<script src="%s/captcha.js" defer></script>',
+			e($endpoint)
+		);
+	}
+
+	public static function extendInitJs(string $functionName = 'onloadFunction'): string
+	{
+		$endpoint = static::getEndpoint();
+
+		return sprintf(
+			'<script src="%s/captcha.js?render=onload&onload=%s"></script>',
+			e($endpoint),
+			e($functionName)
+		);
+	}
 }
