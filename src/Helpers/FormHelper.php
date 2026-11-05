@@ -15,6 +15,12 @@ class FormHelper
 	{
 		$endpoint = trim((string) config('yandex-smart-captcha.endpoint', 'https://smartcaptcha.cloud.yandex.ru'));
 
+		if ($endpoint === '')
+		{
+			// fallback на дефолт Yandex
+			$endpoint = 'https://smartcaptcha.cloud.yandex.ru';
+		}
+
 		// Если схема не указана — добавляем https://
 		if (!preg_match('#^https?://#i', $endpoint))
 		{
